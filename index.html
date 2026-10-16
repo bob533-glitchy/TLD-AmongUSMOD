@@ -1,346 +1,207 @@
 <!DOCTYPE html>
-<html lang="en" class=""><head><script>window.livecodes = window.livecodes || {};</script><title>Untitled Project</title><meta name="title" content="Untitled Project"><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><style id="__livecodes_styles__"></style><script src="https://cdn.jsdelivr.net/npm/es-module-shims@1.10.0/dist/es-module-shims.js" async=""></script><script type="importmap">{
-  "imports": {}
-}</script></head><body>```html
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Among Us Legacy</title>
 
+  <link rel="stylesheet" href="TemplateData/style.css">
+  <script src="TemplateData/UnityProgress.js"></script>
+  <script src="Build/UnityLoader.js"></script>
 
+  <style>
+    * { box-sizing: border-box; }
 
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Among Us Legacy</title>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      font-family: Arial, sans-serif;
+    }
 
-<link rel="stylesheet" href="TemplateData/style.css">
-<script src="TemplateData/UnityProgress.js"></script>
-<script src="Build/UnityLoader.js"></script>
+    .webgl-content, #gameContainer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
 
-<style>
-* { box-sizing: border-box; }
+    #gameContainer canvas {
+      display: block;
+      width: 100% !important;
+      height: 100% !important;
+    }
 
-html, body {
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background: #000;
-  font-family: Arial, sans-serif;
-}
+    .footer { display: none !important; }
 
-.webgl-content, #gameContainer {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
+    #logoButton {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      width: 66px;
+      height: 66px;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      background: #050505;
+      cursor: pointer;
+      z-index: 10000;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 35px;
+      box-shadow: 0 0 18px #ffffff33;
+      transition: transform .15s, box-shadow .15s;
+    }
 
-#gameContainer canvas {
-  display: block;
-  width: 100% !important;
-  height: 100% !important;
-}
+    #logoButton:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 22px #ffffff66;
+    }
 
-.footer { display: none !important; }
+    #logoButton img {
+      width: 86%;
+      height: 86%;
+      object-fit: contain;
+      border-radius: 50%;
+    }
 
-/* Floating logo button */
-#logoButton {
-  position: fixed;
-  right: 22px;
-  bottom: 22px;
-  width: 66px;
-  height: 66px;
-  border: 2px solid #fff;
-  border-radius: 50%;
-  background: #050505;
-  cursor: pointer;
-  z-index: 10000;
-  display: grid;
-  place-items: center;
-  box-shadow: 0 0 18px #ffffff33;
-  transition: transform .15s, box-shadow .15s;
-}
+    #modMenu {
+      position: fixed;
+      right: 22px;
+      bottom: 100px;
+      width: 310px;
+      max-width: calc(100vw - 28px);
+      color: #eee;
+      background: #14161c;
+      border: 1px solid #383d48;
+      border-radius: 14px;
+      z-index: 9999;
+      box-shadow: 0 12px 45px #000b;
+      overflow: hidden;
+      display: none;
+    }
 
-#logoButton:hover {
-  transform: scale(1.08);
-  box-shadow: 0 0 22px #ffffff66;
-}
+    #modMenu.open { display: block; }
 
-#logoButton img {
-  width: 86%;
-  height: 86%;
-  object-fit: contain;
-  border-radius: 50%;
-}
+    #menuHeader {
+      padding: 15px;
+      background: #20242d;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: move;
+      user-select: none;
+      border-bottom: 1px solid #393e48;
+      touch-action: none;
+    }
 
-/* Menu panel */
-#modMenu {
-  position: fixed;
-  right: 22px;
-  bottom: 100px;
-  width: 310px;
-  max-width: calc(100vw - 28px);
-  color: #eee;
-  background: #14161c;
-  border: 1px solid #383d48;
-  border-radius: 14px;
-  z-index: 9999;
-  box-shadow: 0 12px 45px #000b;
-  overflow: hidden;
-  display: none;
-}
+    #menuHeader strong {
+      font-size: 15px;
+      letter-spacing: 1px;
+    }
 
-#modMenu.open { display: block; }
+    #closeMenu {
+      color: white;
+      background: transparent;
+      border: 0;
+      font-size: 23px;
+      cursor: pointer;
+    }
 
-#menuHeader {
-  padding: 15px;
-  background: #20242d;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: move;
-  user-select: none;
-  border-bottom: 1px solid #393e48;
-}
+    #tabs {
+      display: flex;
+      padding: 8px;
+      gap: 6px;
+      background: #191b22;
+    }
 
-#menuHeader strong {
-  font-size: 15px;
-  letter-spacing: 1px;
-}
+    .tab {
+      flex: 1;
+      border: 0;
+      padding: 9px 4px;
+      color: #aaa;
+      background: #242730;
+      border-radius: 7px;
+      cursor: pointer;
+    }
 
-#closeMenu {
-  color: white;
-  background: transparent;
-  border: 0;
-  font-size: 23px;
-  cursor: pointer;
-}
+    .tab.active {
+      color: #101712;
+      background: #7dffb2;
+      font-weight: bold;
+    }
 
-#tabs {
-  display: flex;
-  padding: 8px;
-  gap: 6px;
-  background: #191b22;
-}
+    .tabContent {
+      display: none;
+      padding: 14px;
+    }
 
-.tab {
-  flex: 1;
-  border: 0;
-  padding: 9px 4px;
-  color: #aaa;
-  background: #242730;
-  border-radius: 7px;
-  cursor: pointer;
-}
+    .tabContent.active { display: block; }
 
-.tab.active {
-  color: #101712;
-  background: #7dffb2;
-  font-weight: bold;
-}
+    .sectionTitle {
+      color: #7dffb2;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 2px 0 12px;
+    }
 
-.tabContent {
-  display: none;
-  padding: 14px;
-}
+    .option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 11px 0;
+      border-bottom: 1px solid #292c35;
+    }
 
-.tabContent.active { display: block; }
+    .option:last-child { border-bottom: 0; }
 
-.sectionTitle {
-  color: #7dffb2;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin: 2px 0 12px;
-}
+    .option label { font-size: 13px; }
 
-.option {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 11px 0;
-  border-bottom: 1px solid #292c35;
-}
+    .option small {
+      display: block;
+      color: #858b98;
+      font-size: 11px;
+      margin-top: 4px;
+    }
 
-.option:last-child { border-bottom: 0; }
+    .option input[type="checkbox"] {
+      width: 17px;
+      height: 17px;
+      accent-color: #7dffb2;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
 
-.option label {
-  font-size: 13px;
-}
+    .option input[type="number"] {
+      width: 68px;
+      padding: 6px;
+      color: white;
+      background: #242730;
+      border: 1px solid #454a56;
+      border-radius: 6px;
+    }
 
-.option small {
-  display: block;
-  color: #858b98;
-  font-size: 11px;
-  margin-top: 4px;
-}
+    #menuFooter {
+      padding: 10px 14px;
+      color: #7c8290;
+      font-size: 10px;
+      text-align: center;
+      background: #101116;
+    }
 
-.option input[type="checkbox"] {
-  width: 17px;
-  height: 17px;
-  accent-color: #7dffb2;
-  cursor: pointer;
-}
+    @media (max-width: 480px) {
+      #modMenu {
+        right: 12px;
+        bottom: 88px;
+      }
 
-.option input[type="number"] {
-  width: 68px;
-  padding: 6px;
-  color: white;
-  background: #242730;
-  border: 1px solid #454a56;
-  border-radius: 6px;
-}
-
-#menuFooter {
-  padding: 10px 14px;
-  color: #7c8290;
-  font-size: 10px;
-  text-align: center;
-  background: #101116;
-}
-
-@media (max-width: 480px) {
-  #modMenu {
-    right: 12px;
-    bottom: 88px;
-  }
-  #logoButton {
-    right: 14px;
-    bottom: 14px;
-  }
-}
-</style>
-
-
-
-<div class="webgl-content">
-  <div id="gameContainer"></div>
-</div>
-
-<button id="logoButton" title="Open menu" aria-label="Open mod menu">
-  <img src="logo.png" alt="Menu logo" onerror="this.style.display='none';this.parentElement.textContent='☻'">
-</button>
-
-<div id="modMenu">
-  <div id="menuHeader">
-    <strong>LEGACY TOOLS</strong>
-    <button id="closeMenu" aria-label="Close menu">×</button>
-  </div>
-
-  <div id="tabs">
-    <button class="tab active" data-tab="player">Player</button>
-    <button class="tab" data-tab="visuals">Visuals</button>
-    <button class="tab" data-tab="settings">Settings</button>
-  </div>
-
-  <div class="tabContent active" id="player">
-    <div class="sectionTitle">Movement</div>
-
-    <div class="option">
-      <label>Noclip
-        <small>UI prototype — not connected to movement</small>
-      </label>
-      <input type="checkbox" data-feature="noclip">
-    </div>
-
-    <div class="option">
-      <label>Ghost-style movement
-        <small>UI prototype — not connected to movement</small>
-      </label>
-      <input type="checkbox" data-feature="ghostMovement">
-    </div>
-  </div>
-
-  <div class="tabContent" id="visuals">
-    <div class="sectionTitle">Visual effects</div>
-
-    <div class="option">
-      <label>Red impostor highlight
-        <small>Prototype toggle</small>
-      </label>
-      <input type="checkbox" data-feature="impostorHighlight">
-    </div>
-
-    <div class="option">
-      <label>RGB crewmate effect
-        <small>Prototype toggle</small>
-      </label>
-      <input type="checkbox" data-feature="rgbEffect">
-    </div>
-  </div>
-
-  <div class="tabContent" id="settings">
-    <div class="sectionTitle">Settings</div>
-
-    <div class="option">
-      <label>Custom kill cooldown
-        <small>UI prototype — not connected to game logic</small>
-      </label>
-      <input type="checkbox" data-feature="customCooldown">
-    </div>
-
-    <div class="option">
-      <label for="cooldown">Cooldown value (seconds)</label>
-      <input id="cooldown" type="number" min="0" max="60" value="10">
-    </div>
-  </div>
-
-  <div id="menuFooter">LEGACY BUILD · UI PROTOTYPE</div>
-</div>
-
-<script>
-const menu = document.getElementById("modMenu");
-const logoButton = document.getElementById("logoButton");
-
-logoButton.addEventListener("click", () => {
-  menu.classList.toggle("open");
-});
-
-document.getElementById("closeMenu").addEventListener("click", () => {
-  menu.classList.remove("open");
-});
-
-document.querySelectorAll(".tab").forEach(button => {
-  button.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach(t =>
-      t.classList.toggle("active", t === button)
-    );
-
-    document.querySelectorAll(".tabContent").forEach(panel =>
-      panel.classList.toggle("active", panel.id === button.dataset.tab)
-    );
-  });
-});
-
-/* Drag the panel by its header */
-const header = document.getElementById("menuHeader");
-let dragging = false, offsetX = 0, offsetY = 0;
-
-header.addEventListener("pointerdown", event => {
-  if (event.target.closest("button")) return;
-
-  dragging = true;
-  const rect = menu.getBoundingClientRect();
-  offsetX = event.clientX - rect.left;
-  offsetY = event.clientY - rect.top;
-  header.setPointerCapture(event.pointerId);
-});
-
-header.addEventListener("pointermove", event => {
-  if (!dragging) return;
-
-  const x = Math.max(0, Math.min(
-    window.innerWidth - menu.offsetWidth,
-    event.clientX - offsetX
-  ));
-  const y = Math.max(0, Math.min(
-    window.innerHeight - menu.offsetHeight,
-    event.clientY - offsetY
-  ));
-
-  menu.style.left = x + "px";
-  menu.style.top = y + "px";
-  menu.style.right = "auto";
-  menu.style.bottom = "auto";
-});
-
-header.addEventListener("pointerup", () => dragging</script><script></script></body></html>
+      #logoButton {
+        right: 14px;
+        bottom: 14px;
+      }
+    }
+  </
